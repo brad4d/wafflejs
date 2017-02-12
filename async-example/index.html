@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>async/await example</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <h1>Anagram Finder</h1>
+    <div class="anagram-finder">
+      <form>
+        <label>Original word: <input name="original-word" type="text"></label>
+        <input type="submit" name="submit-button">
+      </form>
+      <div class="anagram-finder-output">
+        <h2 class="output-title"></h2>
+        <dl>
+        </dl>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
+<!--
+  Phase 1: Just generate permuatations.
+  1. Just copy word to output.
+  1. Generate all possible combinations
+     - ignoring duplicates (pretend all letters are different).
+  2. Store results in a set to eliminate duplicates.
+  3. Sort and display results.
+  Phase 2:
+
+-->
+<!--
+  Possible improvements:
+  - <enter> in original word field submits.
+  - submit button disabled when original word is empty
+  - Make output area a table.
+-->
+<!--
+  Important ingredients:
+    1. At least 3 queries needed to complete task.
+    2. Some queries constructed with results from previous queries.
+    3. Loop required.
+    4. Entertaining to watch in action.
+    5. Potential audience participation (twitter?)
+    6. Possibly realistic use-case.
+    7. Promise.race() usage?
+    8. Has a usable offline mode.
+    9. Demonstrate that page remains usable.
+    10. not a case where the server should really do this work.
+        - mashup - no server has all the data (but couldn't ours pull it together?)
+        - node.js - we are the server
+        - chrome app or extension
+
+  Ideas:
+  - Mashup data from multiple sources.
+  - Paging through data.
+  - Name combiner?
+  - Mad libs
+  - Match Trump tweet to Fox news
+  - battleship game?
+  - whack a mole?
+  - Enter a word & fetch anagrams and their definitions.
+    - server just looks up a single word at a time
+-->
+<!-- vim: set shiftwidth=2 tabstop=2 expandtab : -->
