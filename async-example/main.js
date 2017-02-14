@@ -9,14 +9,14 @@ class AnagramFinder {
             assertTruthy(
                 element.querySelector('.anagram-finder-output'),
                 'output element not found'));
-    const definitionService = new DefinitionService();
-    return new AnagramFinder(inputForm, outputDisplay, definitionService);
+    const wordLookupService = new WordLookupService();
+    return new AnagramFinder(inputForm, outputDisplay, wordLookupService);
   }
 
-  constructor(inputForm, outputDisplay, definitionService) {
+  constructor(inputForm, outputDisplay, wordLookupService) {
     this.inputForm_ = inputForm;
     this.outputDisplay_ = outputDisplay;
-    this.definitionService_ = definitionService;
+    this.wordLookupService_ = wordLookupService;
   }
 
   async run() {
@@ -28,9 +28,9 @@ class AnagramFinder {
       this.resetOutputDisplay(originalWord, potentialWords);
 
       for (const potentialWord of potentialWords) {
-        const definition = await this.getDefinition(potentialWord);
-        if (definition) {
-          this.setDefinition(potentialWord, definition);
+        const response = await this.lookup(potentialWord);
+        if (response.isAWord) {
+          this.setIsAWord(potentialWord);
         } else {
           this.setIsNotAWord(potentialWord);
         }
@@ -49,12 +49,12 @@ class AnagramFinder {
     this.outputDisplay_.setPotentialWords(potentialWords);
   }
 
-  async getDefinition(word) {
-    return this.definitionService_.getDefinition(word);
+  async lookup(word) {
+    return this.wordLookupService_.lookup(word);
   }
 
-  setDefinition(word, definition) {
-    this.outputDisplay_.setDefinition(word, definition);
+  setIsAWord(word) {
+    this.outputDisplay_.setIsAWord(word);
   }
 
   setIsNotAWord(nonWord) {
@@ -162,6 +162,10 @@ class OutputDisplay {
   setIsNotAWord(word) {
     this.wordDisplay_[word].setIsNotAWord();
   }
+
+  setIsAWord(word) {
+    this.wordDisplay_[word].setIsAWord();
+  }
 }
 
 class WordDisplay {
@@ -194,11 +198,25 @@ class WordDisplay {
     this.ddElm_.innerText = 'NOT A WORD';
     this.ddElm_.setAttribute('style', 'color: red;');
   }
+
+  setIsAWord() {
+    this.ddElm_.innerText = 'IS A WORD';
+    this.ddElm_.setAttribute('style', 'color: green;');
+  }
 }
 
-class DefinitionService {
-  getDefinition(word) {
-    return Promise.resolve(null);
+class WordLookupService {
+  lookup(word) {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = 'json'
+    const promise = new Promise((resolve, reject) => {
+      xhr.addEventListener('load', () => {
+        resolve(xhr.response);
+      });
+    });
+    xhr.open('GET', `/lookup?word=${word}`);
+    xhr.send();
+    return promise;
   }
 }
 
