@@ -1,2 +1,3 @@
-- Auto focus word input.
-- change output to a table.
+- Only show actual words and word currently being checked.
+- disable form while finding anagrams
+- add cancel button

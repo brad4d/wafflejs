@@ -91,8 +91,9 @@ class InputForm {
   }
 
   enable() {
-    this.originalWordElm_.removeAttribute('disabled');
     this.submitButtonElm_.removeAttribute('disabled');
+    this.originalWordElm_.removeAttribute('disabled');
+    this.originalWordElm_.focus();
   }
 
   getFormData() {
@@ -128,21 +129,21 @@ class InputForm {
 class OutputDisplay {
   static createForElement(elm) {
     const outputTitleElm = assertTruthy(elm.querySelector('.output-title'));
-    const definitionListElm = assertTruthy(elm.querySelector('dl'));
-    const outputDisplay = new OutputDisplay(outputTitleElm, definitionListElm);
+    const wordsElm = assertTruthy(elm.querySelector('.output-words'));
+    const outputDisplay = new OutputDisplay(outputTitleElm, wordsElm);
     outputDisplay.clear();
     return outputDisplay;
   }
 
-  constructor(outputTitleElm, definitionListElm) {
+  constructor(outputTitleElm, wordsElm) {
     this.outputTitleElm_ = outputTitleElm;
-    this.definitionListElm_ = outputTitleElm;
+    this.wordsElm_ = wordsElm;
     this.wordDisplay_ = new Map();
   }
 
   clear() {
     this.outputTitleElm_.innerHTML = '';
-    this.definitionListElm_.innerHTML = '';
+    this.wordsElm_.innerHTML = '';
     this.wordDisplay_.clear();
   }
 
@@ -154,8 +155,7 @@ class OutputDisplay {
     words.sort();
     for (const word of words) {
       this.wordDisplay_[word] =
-          WordDisplay.createAndAddToDefinitionList(
-              word, this.definitionListElm_);
+          WordDisplay.createAndAddToElm(word, this.wordsElm_);
     }
   }
 
@@ -169,39 +169,36 @@ class OutputDisplay {
 }
 
 class WordDisplay {
-  static createAndAddToDefinitionList(word, definitionListElm) {
-    const dtElm = document.createElement('dt');
-    const ddElm = document.createElement('dd');
-    definitionListElm.appendChild(dtElm);
-    definitionListElm.appendChild(ddElm);
-    const wordDisplay = new WordDisplay(dtElm, ddElm);
+  static createAndAddToElm(word, elm) {
+    const wordSpan = document.createElement('span');
+    if (elm.hasChildNodes()) {
+      elm.appendChild(document.createTextNode(', '));
+    }
+    elm.appendChild(wordSpan);
+    const wordDisplay = new WordDisplay(wordSpan);
     wordDisplay.setWord(word);
     wordDisplay.setUnknownStatus();
     return wordDisplay;
   }
 
-  constructor(dtElm, ddElm) {
-    this.dtElm_ = dtElm;
-    this.ddElm_ = ddElm;
+  constructor(wordSpan) {
+    this.wordSpan_ = wordSpan;
   }
 
   setWord(word) {
-    this.dtElm_.innerText = word;
+    this.wordSpan_.innerText = word;
   }
 
   setUnknownStatus() {
-    this.ddElm_.innerText = 'Unknown';
-    this.ddElm_.setAttribute('style', 'color: orange;');
+    this.wordSpan_.style.color = 'orange';
   }
 
   setIsNotAWord() {
-    this.ddElm_.innerText = 'NOT A WORD';
-    this.ddElm_.setAttribute('style', 'color: red;');
+    this.wordSpan_.style.color = 'red';
   }
 
   setIsAWord() {
-    this.ddElm_.innerText = 'IS A WORD';
-    this.ddElm_.setAttribute('style', 'color: green;');
+    this.wordSpan_.style.color = 'green';
   }
 }
 
