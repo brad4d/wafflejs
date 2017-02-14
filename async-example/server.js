@@ -1,4 +1,3 @@
-const anagram = require('anagram');
 const child_process = require('child_process');
 const fs = require('fs');
 const http = require('http');
